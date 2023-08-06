@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #charrt {
+            width: 1000px;
+            height: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <form id="dataForm">
+            <label for="monthSelect">Select a month:</label>
+            <select id="monthSelect" name="month">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+            <label for="attendanceInput">Attendance:</label>
+            <input type="number" id="attendanceInput" name="attendance">
+            <label for="performanceInput">Performance:</label>
+            <input type="number" id="performanceInput" name="performance">
+            <button type="submit" id="submitButton">Add Data</button>
+        </form>
+    </div>
+    <div id="charrt">
+        <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
+    <script>
+        let dataByMonth = {
+            January: { attendance: 50, performance: 80 },
+            February: { attendance: 60, performance: 70 },
+            March: { attendance: 70, performance: 90 },
+            April: { attendance: 80, performance: 85 },
+            May: { attendance: 90, performance: 95 },
+            June: { attendance: 85, performance: 75 },
+            July: { attendance: 75, performance: 65 },
+            August: { attendance: 70, performance: 80 },
+            September: { attendance: 80, performance: 70 },
+            October: { attendance: 60, performance: 75 },
+            November: { attendance: 75, performance: 85 },
+            December: { attendance: 85, performance: 90 },
+        };
+
+        let myChart;
+
+        function updateChart() {
+            const ctx = document.getElementById("myChart").getContext("2d");
+            const labels = Object.keys(dataByMonth);
+            const attendanceData = Object.values(dataByMonth).map((data) => data.attendance);
+            const performanceData = Object.values(dataByMonth).map((data) => data.performance);
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Attendance",
+                            data: attendanceData,
+                            backgroundColor: "#007ff",
+                            borderColor: "black",
+                            borderWidth: 1,
+                        },
+                        {
+                            label: "Performance",
+                            data: performanceData,
+                            backgroundColor: "blue",
+                            borderColor: "cyan",
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        }
+
+        function addData(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const month = formData.get("month");
+            const attendance = parseInt(formData.get("attendance"));
+            const performance = parseInt(formData.get("performance"));
+
+            if (!isNaN(attendance) && !isNaN(performance)) {
+                dataByMonth[month] = { attendance, performance };
+                form.reset();
+                updateChart();
+            }
+        }
+
+        document.getElementById("dataForm").addEventListener("submit", addData);
+
+        updateChart();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #charrt {
+            width: 1000px;
+            height: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label for="monthSelect">Select a month:</label>
+        <select id="monthSelect">
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select>
+    </div>
+    <div>
+        <label for="dataInput">Data Value:</label>
+        <input type="number" id="dataInput">
+        <button id="updateButton">Update Data</button>
+        <button id="removeButton">Remove Last Entry</button>
+    </div>
+    <div id="charrt">
+        <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
+    <script>
+        let dataByMonth = {
+            January: 50,
+            February: 80,
+            March: 120,
+            April: 90,
+            May: 110,
+            June: 70,
+            July: 100,
+            August: 60,
+            September: 130,
+            October: 40,
+            November: 70,
+            December: 100,
+        };
+
+        let myChart;
+
+        function updateChart() {
+            const ctx = document.getElementById("myChart").getContext("2d");
+            const labels = Object.keys(dataByMonth);
+            const data = Object.values(dataByMonth);
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Data Value",
+                            data: data,
+                            backgroundColor: "#777",
+                            borderColor: "red",
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        }
+
+        function updateData() {
+            const selectedMonth = document.getElementById("monthSelect").value;
+            const newDataValue = parseInt(document.getElementById("dataInput").value);
+
+            if (!isNaN(newDataValue)) {
+                dataByMonth[selectedMonth] = newDataValue;
+                updateChart();
+            }
+        }
+
+        function removeLastEntry() {
+            const labels = Object.keys(dataByMonth);
+            if (labels.length > 0) {
+                const lastMonth = labels[labels.length - 1];
+                delete dataByMonth[lastMonth];
+                updateChart();
+            }
+        }
+
+        document.getElementById("updateButton").addEventListener("click", updateData);
+        document.getElementById("removeButton").addEventListener("click", removeLastEntry);
+
+        updateChart();
+    </script>
+</body>
+
+</html>

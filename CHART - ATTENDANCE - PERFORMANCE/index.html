@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #charrt {
+          width: 1000px;
+            height: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+<body>
+  <div id="charrt">
+    <canvas id="myChart" width="400" height="200"></canvas>
+  </div>
+  <script>
+    const dataByMonth = {
+      January: { attendance: 50, performance: 80 },
+      February: { attendance: 60, performance: 70 },
+      March: { attendance: 70, performance: 90 },
+      April: { attendance: 80, performance: 85 },
+      May: { attendance: 90, performance: 95 },
+      June: { attendance: 85, performance: 75 },
+      July: { attendance: 75, performance: 65 },
+      August: { attendance: 70, performance: 80 },
+      September: { attendance: 80, performance: 70 },
+      October: { attendance: 60, performance: 75 },
+      November: { attendance: 75, performance: 85 },
+      December: { attendance: 85, performance: 90 },
+    };
+
+    function createChart() {
+      const ctx = document.getElementById("myChart").getContext("2d");
+      const labels = Object.keys(dataByMonth);
+      const attendanceData = Object.values(dataByMonth).map((data) => data.attendance);
+      const performanceData = Object.values(dataByMonth).map((data) => data.performance);
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Attendance",
+              data: attendanceData,
+              backgroundColor: "#666",
+              borderColor: "black",
+              borderWidth: 1,
+            },
+            {
+              label: "Performance",
+              data: performanceData,
+              backgroundColor: "#669",
+              borderColor: "blue",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    }
+
+    createChart();
+  </script>
+</body>
+</html>
